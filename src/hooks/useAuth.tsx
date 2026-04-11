@@ -2,6 +2,8 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+const ADMIN_EMAILS = ["admin@chawnilive.com", "khalidbenbrahim@gmail.com"];
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -19,14 +21,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsAdmin(!!data);
+  const checkAdmin = async (currentUser: User) => {
+    // First check hardcoded admin emails
+    if (ADMIN_EMAILS.includes(currentUser.email ?? "")) {
+      setIsAdmin(true);
+      return;
+    }
+    // Then check database roles
+    try {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", currentUser.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      setIsAdmin(!!data);
+    } catch {
+      setIsAdmin(false);
+    }
   };
 
   useEffect(() => {
@@ -35,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          await checkAdmin(session.user.id);
+          await checkAdmin(session.user);
         } else {
           setIsAdmin(false);
         }
@@ -47,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkAdmin(session.user.id);
+        checkAdmin(session.user);
       }
       setLoading(false);
     });
