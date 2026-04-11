@@ -2,9 +2,6 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
-// Hardcoded admin emails — always granted admin access
-const ADMIN_EMAILS = ["admin@chawnilive.com"];
-
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -23,12 +20,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const checkAdmin = async (currentUser: User) => {
-    // Hardcoded admin bypass
-    if (ADMIN_EMAILS.includes(currentUser.email ?? "")) {
-      setIsAdmin(true);
-      return;
-    }
-    // Fallback: check DB roles
     try {
       const { data } = await supabase
         .from("user_roles")

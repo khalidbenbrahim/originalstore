@@ -7,7 +7,7 @@ import { Eye, EyeOff, Lock, Mail, ShieldCheck, BarChart3, Package, Video } from 
 import { useToast } from "@/hooks/use-toast";
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState("admin@chawnilive.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -151,12 +151,6 @@ export default function AdminLogin() {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 p-4 rounded-2xl bg-blue-50 border border-blue-100">
-              <p className="text-xs text-blue-600 font-semibold mb-1">📋 Identifiants Admin</p>
-              <p className="text-xs text-blue-500">Email : <span className="font-mono font-bold">admin@chawnilive.com</span></p>
-              <p className="text-xs text-blue-500">Mot de passe : <span className="font-mono font-bold">Ch@wni2026!Admin</span></p>
-            </div>
           </div>
         </div>
       </div>
