@@ -16,10 +16,12 @@ export default function Index() {
   const { settings } = useSettings();
   const handleWhatsApp = (p: Product) => openWhatsApp(p, lang, settings.whatsapp_number);
   const featuredOriginal = products.filter((p) => !p.isFlashSale);
-  const featured = Array.from({ length: 8 }).map((_, i) => ({
-    ...featuredOriginal[i % featuredOriginal.length],
-    id: `featured-${i}`
-  }));
+  const featured = featuredOriginal.length > 0
+    ? Array.from({ length: 8 }).map((_, i) => ({
+        ...featuredOriginal[i % featuredOriginal.length],
+        id: `featured-${i}`
+      }))
+    : [];
 
   return (
     <>
