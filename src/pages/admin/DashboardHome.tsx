@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import {
   Package, Video, PlayCircle, MessageSquare,
   ShoppingCart, Settings, ArrowUpRight, TrendingUp,
@@ -18,10 +17,8 @@ const recentActivity = [
 
 export default function DashboardHome() {
   const qc = useQueryClient();
-  const { user } = useAuth();
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "☀️ Bonjour" : hour < 18 ? "🌤️ Bon après-midi" : "🌙 Bonsoir";
-  const name = user?.email?.split("@")[0] ?? "Admin";
+  const greeting = hour < 12 ? "☀️ Good morning" : hour < 18 ? "🌤️ Good afternoon" : "🌙 Good evening";
 
   useEffect(() => {
     const channel = supabase
@@ -90,7 +87,7 @@ export default function DashboardHome() {
         <div className="absolute right-0 top-0 w-64 h-full opacity-10 bg-white" style={{ clipPath: "ellipse(50% 70% at 100% 50%)" }} />
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="text-blue-200 text-sm font-semibold mb-1">{greeting}, {name}</p>
+            <p className="text-blue-200 text-sm font-semibold mb-1">{greeting}, Admin</p>
             <h1 className="text-3xl font-black leading-tight">Tableau de bord</h1>
             <p className="text-blue-200/70 text-sm mt-1">
               {new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
