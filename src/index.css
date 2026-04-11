@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 213 50% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 50% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 50% 12%;
+
+    --primary: 209 100% 27%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 213 50% 12%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 197 100% 47%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 209 100% 27%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 209 100% 27%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 96%;
+    --sidebar-accent-foreground: 213 50% 12%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 209 100% 27%;
+
+    --brand-royal: 209 100% 27%;
+    --brand-navy: 213 50% 12%;
+    --brand-tech: 197 100% 47%;
+    --brand-gold: 43 96% 56%;
+    --whatsapp: 142 70% 40%;
+  }
+
+  .dark {
+    --background: 213 50% 5%;
+    --foreground: 210 20% 96%;
+
+    --card: 213 50% 8%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 213 50% 8%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 197 100% 47%;
+    --primary-foreground: 213 50% 5%;
+
+    --secondary: 213 40% 15%;
+    --secondary-foreground: 210 20% 96%;
+
+    --muted: 213 40% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 197 100% 47%;
+    --accent-foreground: 213 50% 5%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 20% 96%;
+
+    --border: 213 40% 15%;
+    --input: 213 40% 15%;
+    --ring: 197 100% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html[dir="rtl"] body {
+    font-family: 'Cairo', 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+}
