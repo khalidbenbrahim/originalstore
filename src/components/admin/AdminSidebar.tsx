@@ -110,7 +110,7 @@ export function AdminSidebar({ onLogout }: AdminSidebarProps) {
               className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black text-white flex-shrink-0"
               style={{ background: "linear-gradient(135deg, #003366, #0077cc)" }}
             >
-              AD
+              {user?.email?.substring(0, 2).toUpperCase() || 'AD'}
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-bold text-gray-800 truncate">{user?.email?.split('@')[0] || 'Admin'}</div>

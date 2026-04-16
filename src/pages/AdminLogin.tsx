@@ -112,7 +112,7 @@ export default function AdminLogin() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder="admin@chawnilive.ma"
+                    placeholder="khalid.benbrahim.ma@hotmail.com"
                     className="pl-10 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white transition-colors text-gray-800"
                   />
                 </div>

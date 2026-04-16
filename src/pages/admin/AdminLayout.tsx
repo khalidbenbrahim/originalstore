@@ -54,7 +54,7 @@ import { ExternalLink, Bell, LogOut } from "lucide-react";
               <div className="flex items-center gap-2.5 pl-3 border-l border-gray-100">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md"
                   style={{ background: "linear-gradient(135deg, #003366, #0077cc)" }}>
-                  AD
+                  {user.email?.substring(0, 2).toUpperCase() || 'AD'}
                 </div>
                 <div className="hidden sm:block">
                   <div className="text-sm font-bold text-gray-800 leading-tight truncate max-w-[120px]">
