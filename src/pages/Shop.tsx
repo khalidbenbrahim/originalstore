@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { products, Product } from "@/lib/products";
+import { Product } from "@/lib/products";
+import { mapDbProductToFrontend } from "@/lib/dataMapping";
 import { openWhatsApp } from "@/components/WhatsAppButton";
 import { useSettings } from "@/hooks/useSettings";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const categories = ["all", "iphone", "watch", "airpods"] as const;
 
@@ -13,7 +17,21 @@ export default function Shop() {
   const { settings } = useSettings();
   const [category, setCategory] = useState<string>("all");
 
-  const filtered = category === "all" ? products : products.filter((p) => p.category === category);
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["public-products", category],
+    queryFn: async () => {
+      let query = supabase.from("products").select("*").eq("in_stock", true);
+      
+      if (category !== "all") {
+        query = query.eq("category", category);
+      }
+      
+      const { data, error } = await query.order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data as any[]).map(mapDbProductToFrontend);
+    },
+  });
+
   const handleWhatsApp = (p: Product) => openWhatsApp(p, lang, settings.whatsapp_number);
 
   const categoryLabels: Record<string, string> = {
@@ -45,9 +63,23 @@ export default function Shop() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} onWhatsApp={handleWhatsApp} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="aspect-square rounded-xl" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))
+          ) : products.length === 0 ? (
+            <div className="col-span-full py-20 text-center">
+              <p className="text-muted-foreground">{t("products.noProducts") || "Aucun produit trouvé dans cette catégorie."}</p>
+            </div>
+          ) : (
+            products.map((product) => (
+              <ProductCard key={product.id} product={product} onWhatsApp={handleWhatsApp} />
+            ))
+          )}
         </div>
       </div>
     </section>

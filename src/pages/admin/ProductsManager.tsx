@@ -174,6 +174,17 @@ export default function ProductsManager() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
+                  <Label>Couleur (Français)</Label>
+                  <Input value={form.color} onChange={(e) => updateField("color", e.target.value)} placeholder="ex: Titane Naturel" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Couleur (Arabe)</Label>
+                  <Input value={form.color_ar} onChange={(e) => updateField("color_ar", e.target.value)} dir="rtl" placeholder="تيتانيوم طبيعي" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
                   <Label>Batterie Health %</Label>
                   <Input type="number" value={form.battery_health ?? ""} onChange={(e) => updateField("battery_health", e.target.value ? +e.target.value : null)} placeholder="100" />
                 </div>
@@ -183,6 +194,26 @@ export default function ProductsManager() {
                     <Label>En stock</Label>
                   </div>
                 </div>
+              </div>
+
+              <div className="bg-destructive/5 p-4 rounded-xl border border-destructive/10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-destructive font-bold flex items-center gap-2">
+                    <Plus className="h-4 w-4 rotate-45" /> Flash Sale
+                  </Label>
+                  <Switch checked={form.is_flash_sale} onCheckedChange={(v) => updateField("is_flash_sale", v)} />
+                </div>
+                
+                {form.is_flash_sale && (
+                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                    <Label>Date de fin du Flash Sale</Label>
+                    <Input 
+                      type="datetime-local" 
+                      value={form.flash_sale_ends ? new Date(form.flash_sale_ends).toISOString().slice(0, 16) : ""} 
+                      onChange={(e) => updateField("flash_sale_ends", e.target.value ? new Date(e.target.value).toISOString() : null)} 
+                    />
+                  </div>
+                )}
               </div>
 
               <Button onClick={handleSave} className="w-full py-6 text-lg" disabled={saveMutation.isPending}>

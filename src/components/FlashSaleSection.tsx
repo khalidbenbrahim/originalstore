@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Flame, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { products, Product } from "@/lib/products";
+import { Product } from "@/lib/products";
+import { mapDbProductToFrontend } from "@/lib/dataMapping";
 import ProductCard from "./ProductCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function CountdownTimer({ endTime }: { endTime: string }) {
   const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0 });
@@ -35,12 +39,23 @@ function CountdownTimer({ endTime }: { endTime: string }) {
 
 export default function FlashSaleSection({ onWhatsApp }: { onWhatsApp: (p: Product) => void }) {
   const { t } = useLanguage();
-  const flashOriginal = products.filter((p) => p.isFlashSale);
-  const flashProducts = flashOriginal.length > 0 
-    ? Array.from({ length: 6 }).map((_, i) => ({ ...flashOriginal[i % flashOriginal.length], id: `flash-${i}` }))
-    : [];
 
-  if (flashProducts.length === 0) return null;
+  const { data: flashProducts = [], isLoading } = useQuery({
+    queryKey: ["public-flash-products"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("in_stock", true)
+        .eq("is_flash_sale", true)
+        .order("created_at", { ascending: false })
+        .limit(6);
+      if (error) throw error;
+      return (data as any[]).map(mapDbProductToFrontend);
+    },
+  });
+
+  if (!isLoading && flashProducts.length === 0) return null;
 
   return (
     <section className="py-16 bg-gradient-to-r from-destructive/5 via-background to-destructive/5">
@@ -64,9 +79,18 @@ export default function FlashSaleSection({ onWhatsApp }: { onWhatsApp: (p: Produ
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
-          {flashProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onWhatsApp={onWhatsApp} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="aspect-square rounded-xl" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            ))
+          ) : (
+            flashProducts.map((product) => (
+              <ProductCard key={product.id} product={product} onWhatsApp={onWhatsApp} />
+            ))
+          )}
         </div>
       </div>
     </section>

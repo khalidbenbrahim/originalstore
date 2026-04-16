@@ -16,6 +16,7 @@ interface Testimonial {
   id: string;
   name: string;
   text: string;
+  text_ar?: string;
   rating: number;
   is_active: boolean;
   created_at: string;
@@ -24,6 +25,7 @@ interface Testimonial {
 const emptyTestimonial = {
   name: "",
   text: "",
+  text_ar: "",
   rating: 5,
   is_active: true,
 };
@@ -105,8 +107,12 @@ export default function TestimonialsManager() {
                 <Input value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} placeholder="ex: Ahmed" />
               </div>
               <div className="space-y-2">
-                <Label>Avis / Témoignage</Label>
-                <Textarea value={form.text} onChange={(e) => setForm({...form, text: e.target.value})} placeholder="ex: Très satisfait de mon iPhone 15 Pro Max..." className="min-h-[100px]" />
+                <Label>Avis / Témoignage (Français)</Label>
+                <Textarea value={form.text} onChange={(e) => setForm({...form, text: e.target.value})} placeholder="ex: Très satisfait de mon iPhone 15 Pro Max..." className="min-h-[80px]" />
+              </div>
+              <div className="space-y-2">
+                <Label>Avis / Témoignage (Arabe)</Label>
+                <Textarea value={form.text_ar} onChange={(e) => setForm({...form, text_ar: e.target.value})} dir="rtl" placeholder="ex: راضي جداً عن الآيفون الجديد..." className="min-h-[80px]" />
               </div>
               <div className="space-y-2">
                 <Label>Note (1-5)</Label>

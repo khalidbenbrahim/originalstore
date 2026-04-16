@@ -18,34 +18,13 @@ interface YouTubeVideo {
   category: "battery" | "unboxing" | string;
 }
 
-const FALLBACK_VIDEOS: YouTubeVideo[] = [
-  {
-    id: "1",
-    video_id: "dQw4w9WgXcQ",
-    title: "Battery Health Check - iPhone 15 Pro Max",
-    category: "battery",
-  },
-  {
-    id: "2",
-    video_id: "dQw4w9WgXcQ",
-    title: "Unboxing iPhone 14 Pro - Original Store",
-    category: "unboxing",
-  },
-  {
-    id: "3",
-    video_id: "dQw4w9WgXcQ",
-    title: "Battery 100% - iPhone 13",
-    category: "battery",
-  },
-];
-
-function VideoCard({
+const VideoCard = ({
   video,
   onPlay,
 }: {
   video: YouTubeVideo;
   onPlay: (video: YouTubeVideo) => void;
-}) {
+}) => {
   const thumbnailUrl = `https://img.youtube.com/vi/${video.video_id}/hqdefault.jpg`;
 
   return (
@@ -81,7 +60,7 @@ export default function YouTubeLiveSection() {
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
   const { settings } = useSettings();
 
-  const { data: dbVideos = [] } = useQuery({
+  const { data: videos = [], isLoading } = useQuery({
     queryKey: ["public-youtube-videos"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -94,7 +73,7 @@ export default function YouTubeLiveSection() {
     },
   });
 
-  const displayVideos = dbVideos.length > 0 ? dbVideos : FALLBACK_VIDEOS;
+  if (!isLoading && videos.length === 0) return null;
 
   return (
     <section className="py-16 bg-muted/30">
@@ -110,7 +89,7 @@ export default function YouTubeLiveSection() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayVideos.map((video) => (
+          {videos.map((video) => (
             <div key={video.id} className="flex flex-col gap-4">
               <VideoCard
                 video={video}
