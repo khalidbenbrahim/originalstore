@@ -121,7 +121,9 @@ export default function ProductsManager() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editing ? "MODIFIER (MIS À JOUR)" : "AJOUTER (MIS À JOUR)"} un produit</DialogTitle>
+<DialogTitle>
+  {editing ? "Modifier le produit" : "Ajouter un produit"}
+</DialogTitle>
               <CardDescription>Remplissez les informations détaillées du produit.</CardDescription>
             </DialogHeader>
             <div className="space-y-6 mt-4">
