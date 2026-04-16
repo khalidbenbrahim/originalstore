@@ -17,6 +17,7 @@ export function mapDbProductToFrontend(dbProduct: DBProduct): Product {
     color: dbProduct.color,
     colorAr: dbProduct.color_ar,
     isFlashSale: dbProduct.is_flash_sale,
+    isFeatured: (dbProduct as any).is_featured ?? false,
     flashSaleEnds: dbProduct.flash_sale_ends ?? undefined,
     inStock: dbProduct.in_stock,
   };

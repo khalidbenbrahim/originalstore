@@ -26,7 +26,7 @@ export default function Index() {
         .from("products")
         .select("*")
         .eq("in_stock", true)
-        .eq("is_flash_sale", false)
+        .eq("is_featured" as any, true)
         .order("created_at", { ascending: false })
         .limit(8);
       if (error) throw error;

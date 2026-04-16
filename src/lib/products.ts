@@ -12,6 +12,7 @@ export interface Product {
   color: string;
   colorAr: string;
   isFlashSale?: boolean;
+  isFeatured?: boolean;
   flashSaleEnds?: string;
   inStock: boolean;
 }

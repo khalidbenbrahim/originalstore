@@ -19,6 +19,7 @@ type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
 const emptyProduct: ProductInsert = {
   name: "", name_ar: "", category: "iphone", price: 0, image: "",
   color: "", color_ar: "", in_stock: true, is_flash_sale: false,
+  is_featured: false,
 };
 
 export default function ProductsManager() {
@@ -196,17 +197,27 @@ export default function ProductsManager() {
                 </div>
               </div>
 
-              <div className="bg-destructive/5 p-4 rounded-xl border border-destructive/10 space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-destructive font-bold flex items-center gap-2">
-                    <Plus className="h-4 w-4 rotate-45" /> Flash Sale
-                  </Label>
-                  <Switch checked={form.is_flash_sale} onCheckedChange={(v) => updateField("is_flash_sale", v)} />
-                </div>
+              <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 space-y-4">
+                <Label className="text-primary font-bold flex items-center gap-2">📍 Destination d'affichage</Label>
                 
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="flex items-center justify-between p-2 bg-background rounded-lg border border-border/50">
+                    <Label className="text-xs">Boutique</Label>
+                    <Switch checked={form.in_stock} onCheckedChange={(v) => updateField("in_stock", v)} />
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-background rounded-lg border border-border/50">
+                    <Label className="text-xs">Vedette (Accueil)</Label>
+                    <Switch checked={(form as any).is_featured} onCheckedChange={(v) => updateField("is_featured", v)} />
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-background rounded-lg border border-border/50">
+                    <Label className="text-xs">Vente Flash</Label>
+                    <Switch checked={form.is_flash_sale} onCheckedChange={(v) => updateField("is_flash_sale", v)} />
+                  </div>
+                </div>
+
                 {form.is_flash_sale && (
-                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <Label>Date de fin du Flash Sale</Label>
+                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-primary/10">
+                    <Label className="text-xs">Date de fin du Flash Sale</Label>
                     <Input 
                       type="datetime-local" 
                       value={form.flash_sale_ends ? new Date(form.flash_sale_ends).toISOString().slice(0, 16) : ""} 
