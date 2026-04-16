@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AdminSidebarProps {
   onLogout: () => void;
@@ -43,6 +44,7 @@ const menuGroups = [
 
 export function AdminSidebar({ onLogout }: AdminSidebarProps) {
   const { state } = useSidebar();
+  const { user } = useAuth();
   const collapsed = state === "collapsed";
 
   return (
@@ -111,8 +113,8 @@ export function AdminSidebar({ onLogout }: AdminSidebarProps) {
               AD
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-gray-800">admin</div>
-              <div className="text-[10px] text-blue-600 font-semibold">Administrator</div>
+              <div className="text-sm font-bold text-gray-800 truncate">{user?.email?.split('@')[0] || 'Admin'}</div>
+              <div className="text-[10px] text-blue-600 font-semibold truncate capitalize">{user?.email?.split('@')[0]}</div>
             </div>
           </div>
         )}

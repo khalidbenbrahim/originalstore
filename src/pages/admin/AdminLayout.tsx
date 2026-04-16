@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react";
 import { Outlet, Navigate, Link, useNavigate } from "react-router-dom";
-import { isAdminSession, adminLogout } from "@/lib/adminAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Bell, LogOut } from "lucide-react";
 
-export default function AdminLayout() {
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setAuthed(isAdminSession());
-  }, []);
-
-  const handleLogout = () => {
-    adminLogout();
+  const handleLogout = async () => {
+    await signOut();
     navigate("/admin/login");
   };
 
-  if (authed === null) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4">
         <div className="w-10 h-10 rounded-full border-[3px] border-blue-200 border-t-blue-600 animate-spin" />
@@ -27,7 +22,7 @@ export default function AdminLayout() {
     );
   }
 
-  if (!authed) return <Navigate to="/admin/login" replace />;
+  if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
 
   return (
     <SidebarProvider>
@@ -62,7 +57,9 @@ export default function AdminLayout() {
                   AD
                 </div>
                 <div className="hidden sm:block">
-                  <div className="text-sm font-bold text-gray-800 leading-tight">admin</div>
+                  <div className="text-sm font-bold text-gray-800 leading-tight truncate max-w-[120px]">
+                    {user.email?.split('@')[0]}
+                  </div>
                   <div className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Administrator</div>
                 </div>
                 <button onClick={handleLogout} className="ml-1 text-gray-400 hover:text-red-500 transition-colors" title="Logout">

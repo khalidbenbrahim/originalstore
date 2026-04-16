@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { adminLogin } from "@/lib/adminAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, BarChart3, Package, Video } from "lucide-react";
@@ -12,20 +12,25 @@ export default function AdminLogin() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600)); // Natural delay
-    const ok = adminLogin(email, password);
+    
+    const { error } = await signIn(email, password);
     setLoading(false);
-    if (ok) {
+
+    if (!error) {
+      toast({
+        title: "Success",
+        description: "Welcome back!",
+      });
       navigate("/admin");
     } else {
       toast({
         title: "Login failed",
-        description: "Incorrect email or password.",
+        description: error.message || "Incorrect email or password.",
         variant: "destructive",
       });
     }
